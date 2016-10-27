@@ -34,7 +34,10 @@ class ReqHandler: public IRequestHandler {
 
   virtual bool DoPOST(const HttpReqInfo& httpReq, string& strSnd) {
     vector<string> words;
-    Run(httpReq.GetBody(), "MIX", "simple", strSnd);
+    string method, format;
+    httpReq.GET("method", method);
+    httpReq.GET("format", format);
+    Run(httpReq.GetBody(), method, format, strSnd);
     return true;
   }
 
@@ -42,6 +45,15 @@ class ReqHandler: public IRequestHandler {
            const string& method, 
            const string& format,
            string& strSnd) const {
+    vector<pair<string, string> > word_tags;
+    if ("TAG" == method) {
+      jieba_.Tag(sentence, word_tags);
+      for (auto iter = word_tags.begin(); iter != word_tags.end(); ++iter) {
+          strSnd.append(iter->first).append("\t").append(iter->second).append("\n");
+      }
+      return;
+    }
+
     vector<string> words;
     if ("MP" == method) {
       jieba_.Cut(sentence, words, false);

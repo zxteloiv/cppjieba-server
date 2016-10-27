@@ -48,7 +48,8 @@ class ReqHandler: public IRequestHandler {
     vector<pair<string, string> > word_tags;
     if ("TAG" == method) {
       jieba_.Tag(sentence, word_tags);
-      for (auto iter = word_tags.begin(); iter != word_tags.end(); ++iter) {
+      for (vector<pair<string, string> >::const_iterator iter = word_tags.begin();
+              iter != word_tags.end(); ++iter) {
           strSnd.append(iter->first).append("\t").append(iter->second).append("\n");
       }
       return;
